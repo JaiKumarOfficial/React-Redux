@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import {
   Card,
   CardImg,
@@ -7,8 +7,19 @@ import {
   CardTitle,
   Breadcrumb,
   BreadcrumbItem,
+  Button,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Row,
+  Label,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import { Control, LocalForm, Errors } from "react-redux-form";
+
+const required = (value) => value && value.length;
+const maxLength = (len) => (val) => !val || val.length <= len;
+const minLength = (len) => (val) => val && val.length >= len;
 
 function formatDate(dateTime) {
   const months = [
@@ -84,6 +95,7 @@ const DishdetailComponent = (props) => {
                   <ul className="list-unstyled">
                     {renderComments(props.comments)}
                   </ul>
+                  <CommentForm />
                 </CardBody>
               </div>
             ) : (
@@ -97,5 +109,112 @@ const DishdetailComponent = (props) => {
     </div>
   );
 };
+
+class CommentForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      commentForm: false,
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.RenderComments = this.RenderComments.bind(this);
+  }
+
+  handleSubmit = (values) => {
+    console.log("Current State is: " + JSON.stringify(values));
+    alert("Current State is: " + JSON.stringify(values));
+  };
+
+  RenderComments = () => {
+    this.setState({
+      commentForm: !this.state.commentForm,
+    });
+  };
+
+  render() {
+    return (
+      <>
+        <Button outline onClick={this.RenderComments}>
+          <span className="fa fa-pencil fa-lg"></span> Submit Comment
+        </Button>
+        <Modal isOpen={this.state.commentForm} toggle={this.RenderComments}>
+          <ModalHeader toggle={this.RenderComments}>Comment</ModalHeader>
+          <ModalBody>
+            <LocalForm
+              onSubmit={(values) => this.handleSubmit(values)}
+              className="m-3"
+            >
+              <Row className="form-group">
+                <Label htmlFor="rating">Rating</Label>
+                <Control.select
+                  model=".rating"
+                  className="form-control"
+                  id="rating"
+                  name="rating"
+                >
+                  <option selected="true">1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </Control.select>
+              </Row>
+              <Row className="form-group">
+                <Label htmlFor="name">Your Name</Label>
+                <Control.text
+                  model=".name"
+                  className="form-control"
+                  id="name"
+                  name="name"
+                  validators={{
+                    required,
+                    minLength: minLength(3),
+                    maxLength: maxLength(15),
+                  }}
+                />
+                <Errors
+                  className="text-danger"
+                  model=".name"
+                  show="touched"
+                  messages={{
+                    required: "Required ",
+                    minLength: "Must be greater than 2 characters ",
+                    maxLength: "Must be less than 15 characters",
+                  }}
+                />
+              </Row>
+              <Row className="form-group">
+                <Label htmlFor="comment">Comment</Label>
+                <Control.textarea
+                  model=".comment"
+                  className="form-control"
+                  id="comment"
+                  name="comment"
+                  rows="6"
+                  validators={{
+                    required,
+                  }}
+                />
+                <Errors
+                  className="text-danger"
+                  model=".comment"
+                  show="touched"
+                  messages={{
+                    required: "Required ",
+                  }}
+                />
+              </Row>
+              <Row className="form-group">
+                <Button type="submit" value="submit" color="primary">
+                  Submit
+                </Button>
+              </Row>
+            </LocalForm>
+          </ModalBody>
+        </Modal>
+      </>
+    );
+  }
+}
 
 export default DishdetailComponent;

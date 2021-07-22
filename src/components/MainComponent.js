@@ -15,6 +15,7 @@ const mapStoreToProps = (state) => {
     comments: state.comments,
     promotions: state.promotions,
     leaders: state.leaders,
+    // commentForm: state.commentForm,
   };
 };
 
@@ -53,6 +54,7 @@ class Main extends Component {
           comments={this.props.comments.filter(
             (comment) => comment.dishId === parseInt(match.params.dishId, 10)
           )}
+          // commentForm={this.props.commentForm}
         />
       );
     };
