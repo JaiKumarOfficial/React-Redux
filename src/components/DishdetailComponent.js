@@ -95,7 +95,10 @@ const DishdetailComponent = (props) => {
                   <ul className="list-unstyled">
                     {renderComments(props.comments)}
                   </ul>
-                  <CommentForm />
+                  <CommentForm
+                    dishId={props.dish.id}
+                    addComment={props.addComment}
+                  />
                 </CardBody>
               </div>
             ) : (
@@ -121,8 +124,12 @@ class CommentForm extends Component {
   }
 
   handleSubmit = (values) => {
-    console.log("Current State is: " + JSON.stringify(values));
-    alert("Current State is: " + JSON.stringify(values));
+    this.props.addComment(
+      this.props.dishId,
+      values.rating || 1,
+      values.name,
+      values.comment
+    );
   };
 
   RenderComments = () => {

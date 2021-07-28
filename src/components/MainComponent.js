@@ -8,6 +8,7 @@ import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import Contact from "./ContactComponent";
 import About from "./AboutComponent";
 import { connect } from "react-redux";
+import { addComment } from "../redux/actionCreators";
 
 const mapStoreToProps = (state) => {
   return {
@@ -15,7 +16,13 @@ const mapStoreToProps = (state) => {
     comments: state.comments,
     promotions: state.promotions,
     leaders: state.leaders,
-    // commentForm: state.commentForm,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addComment: (dishId, rating, author, comment) =>
+      dispatch(addComment(dishId, rating, author, comment)),
   };
 };
 
@@ -54,7 +61,7 @@ class Main extends Component {
           comments={this.props.comments.filter(
             (comment) => comment.dishId === parseInt(match.params.dishId, 10)
           )}
-          // commentForm={this.props.commentForm}
+          addComment={this.props.addComment}
         />
       );
     };
@@ -80,4 +87,4 @@ class Main extends Component {
   }
 }
 
-export default withRouter(connect(mapStoreToProps)(Main));
+export default withRouter(connect(mapStoreToProps, mapDispatchToProps)(Main));
