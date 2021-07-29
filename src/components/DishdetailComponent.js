@@ -16,6 +16,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import { Control, LocalForm, Errors } from "react-redux-form";
+import { Loading } from "./LoadingComponent";
 
 const required = (value) => value && value.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
@@ -60,7 +61,11 @@ function renderDish(dish) {
   return (
     <div className="col-12 col-md-5 m-1">
       <Card>
-        <CardImg top src={dish.image} alt={dish.name} />
+        <CardImg
+          top
+          src={`http://localhost:3001/${dish.image}`}
+          alt={dish.name}
+        />
         <CardBody>
           <CardTitle>{dish.name}</CardTitle>
           <CardText>{dish.description}</CardText>
@@ -107,7 +112,10 @@ const DishdetailComponent = (props) => {
           </div>
         </>
       ) : (
-        <div></div>
+        <div className="row">
+          {props.isLoading && <Loading />}
+          {props.err && <h4>{props.err}</h4>}
+        </div>
       )}
     </div>
   );
